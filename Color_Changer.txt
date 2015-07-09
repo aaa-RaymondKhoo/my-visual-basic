@@ -1,0 +1,84 @@
+Private Sub VScroll3_Change()
+    Dim value As Long
+    
+    myValue (value)
+        
+End Sub
+
+Private Sub VScroll3_Scroll()
+    VScroll3_Change
+End Sub
+
+Private Sub VScroll2_Change()
+    Dim value As Long
+        
+    myValue (value)
+    
+End Sub
+
+Private Sub VScroll2_Scroll()
+    VScroll2_Change
+End Sub
+
+Private Sub VScroll1_Change()
+    Dim value As Long
+        
+    myValue (value)
+    
+End Sub
+
+Private Sub VScroll1_Scroll()
+    VScroll1_Change
+End Sub
+
+Function myValue(ByRef value As Long) As Long
+    Dim ValueRed As Integer
+    Dim ValueGreen As Integer
+    Dim ValueBlue As Integer
+    Dim value1 As Long
+    
+    Dim hex_val1 As String
+    Dim hex_val2 As String
+    Dim hex_val3 As String
+    
+    ValueRed = 255 - VScroll1.value
+    ValueGreen = 255 - VScroll2.value
+    ValueBlue = 255 - VScroll3.value
+    value1 = RGB(ValueRed, ValueGreen, ValueBlue)
+    
+    'converts 65535 to FFFF
+    hex_val1 = Hex(ValueRed)
+    hex_val2 = Hex(ValueGreen)
+    hex_val3 = Hex(ValueBlue)
+    
+    Label1.Caption = CStr(ValueRed)
+    Label2.Caption = CStr(ValueGreen)
+    Label3.Caption = CStr(ValueBlue)
+    
+    Picture1.BackColor = value1
+    
+    Picture2.BackColor = RGB(ValueRed, 0, 0)
+    Picture3.BackColor = RGB(0, ValueGreen, 0)
+    Picture4.BackColor = RGB(0, 0, ValueBlue)
+    
+    Option1(0).Caption = "Dec: " & value1
+    Option1(1).Caption = "Hex: " & hex_val1 & hex_val2 & hex_val3
+    Option1(2).Caption = "RGB: " + CStr(ValueRed) + "," + CStr(ValueGreen) + "," + CStr(ValueBlue)
+        
+    myValue = value1
+    
+    Exit Function
+End Function
+
+'Private Sub Option1(0)_Click()
+    'MsgBox "Decimal Value was clicked"
+'End Sub
+
+'Private Sub Option1(1)_Click()
+    'MsgBox "Hex Value was clicked"
+'End Sub
+
+'Private Sub Option1(2)_Click()
+    'MsgBox "RGB Value was clicked"
+'End Sub
+
