@@ -1,3 +1,43 @@
+Option Explicit
+
+Private Sub cmdClose_Click()
+    End
+End Sub
+
+Private Sub cmdCopy_Click()
+    
+    If Option1(0).value = True Then 'Look for whether there is a value
+        Clipboard.SetText (Option1(0).Caption) ' SetText is Copy and GetText is Paste
+    ElseIf Option1(1).value = True Then
+        Clipboard.SetText (Option1(1).Caption)
+    ElseIf Option1(2).value = True Then
+        Clipboard.SetText (Option1(2).Caption)
+    End If
+   
+    'Select Case Option1(0).Item.Index
+    '    Case 0
+    '        Clipboard.GetText (Option1(0).Item.Caption)
+    '    Case 1
+    '        Clipboard.GetText (Option1(0).Item.Caption)
+    '    Case 2
+    '        Clipboard.GetText (Option1(0).Item.Caption)
+    '    Case Else
+    '        Exit Sub
+    'End Select
+'    If Option1(0).Click() Then
+'        Clipboard.SetText (Option1(0).Caption)
+'    Else
+'        Exit Sub
+'    End If
+End Sub
+
+Private Sub Form_Load()
+    Picture1.BackColor = RGB(128, 128, 128)
+    VScroll1.value = 127
+    VScroll2.value = 127
+    VScroll3.value = 127
+End Sub
+
 Private Sub VScroll3_Change()
     Dim value As Long
     
