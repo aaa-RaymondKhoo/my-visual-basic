@@ -1,0 +1,123 @@
+Private Sub cmdErt_Click()
+    Text4.Text = Encrypt(Text1.Text, Text2.Text)
+End Sub
+
+Private Sub cmdDrt_Click()
+    Text4.Text = Decrypt(Text3.Text, Text2.Text)
+End Sub
+
+Private Sub cmdClose_Click()
+    End
+End Sub
+
+Private Sub Form_Load()
+    Text1.Text = "Please Click here to begin with and type anything you want to encrypted"
+    Text3.Text = "Please Copy you encrypted text from output box by pressing copy, then press paste and then press decrypt !"
+End Sub
+
+Public Function Encrypt(Name As String, Key As Long) As String
+    If ((Key >= 0) And (Key <= 134)) Then
+        Dim v As Long, c1 As String, z As String
+        For v = 1 To Len(Name)
+            c1 = Asc(Mid(Name, v, 1))
+            c1 = Chr(c1 + Key) ' private personal key here !
+            z = z & c1
+        Next v
+        Encrypt = z
+    Else
+        MsgBox ("Please enter only from 0 to 134. No Initial.")
+    End If
+End Function
+
+Public Function Decrypt(Name As String, Key As Long) As String
+    Dim v As Long, c1 As String, z As String
+    For v = 1 To Len(Name)
+        c1 = Asc(Mid(Name, v, 1))
+        c1 = Chr(c1 - Key) ' private personal key here !
+        z = z & c1
+    Next v
+    Decrypt = z
+End Function
+
+Private Sub Form_KeyDown(KeyCode As Integer, Shift As Integer)
+    'make sure KeyPreview is True on Form Properties
+    On Error Resume Next
+    Select Case KeyCode
+        Case vbKeyEscape 'When Press Escape Key
+            CloseX (Value) 'Exit Program
+    End Select
+End Sub
+
+Private Sub Text1_KeyPress(KeyAscii As Integer)
+    If KeyAscii = 13 Then  ' The ENTER key.
+        SendKeys "{tab}"    ' Set the focus to the next control.
+        KeyAscii = 0        ' Ignore this key.
+        ClearA (Value)
+    End If
+End Sub
+
+Private Sub Text2_KeyPress(KeyAscii As Integer)
+    If KeyAscii = 13 Then  ' The ENTER key.
+        SendKeys "{tab}"    ' Set the focus to the next control.
+        KeyAscii = 0        ' Ignore this key.
+        CopyPaste (Value)
+    End If
+End Sub
+
+Private Sub Text3_KeyPress(KeyAscii As Integer)
+    If KeyAscii = 13 Then  ' The ENTER key.
+        SendKeys "{tab}"    ' Set the focus to the next control.
+        KeyAscii = 0        ' Ignore this key.
+        Text4.Text = Decrypt(Text3.Text, Text2.Text)
+    End If
+End Sub
+
+Private Sub Text3_Click()
+    Text3.Text = ""
+End Sub
+
+Private Sub Text2_Click()
+    Text2.Text = ""
+End Sub
+
+Private Sub Text1_Click()
+    Text1.Text = ""
+End Sub
+
+Private Sub cmdCopy_Click()
+    If Text4.Text <> "" Then
+        'Copy the information to clipboard
+        Clipboard.SetText (Text4.Text)
+    Else
+        'If no text was selected, print out an error message
+        MsgBox ("No text is selected to copy")
+    End If
+   
+End Sub
+
+Private Sub cmdPaste_Click()
+    'Get the data stored in the clipboard
+    Text3.Text = Text4.Text
+End Sub
+
+Private Sub cmdClear_Click()
+    'Clear all the data stored in the TextBox
+    Text1.Text = ""
+    ClearA (Value)
+End Sub
+
+Function ClearA(ByRef Value As Long) As Long
+    Text2.Text = ""
+    Text3.Text = ""
+    Text4.Text = ""
+End Function
+
+Function CopyPaste(ByRef Value As Long) As Long
+    Text4.Text = Encrypt(Text1.Text, Text2.Text)
+    Clipboard.SetText (Text4.Text)
+    Text3.Text = Text4.Text
+End Function
+
+Function CloseX(ByRef Value As Long) As Long
+    End
+End Function
