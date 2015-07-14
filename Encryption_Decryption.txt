@@ -1,3 +1,81 @@
+'Form1 Code
+
+Option Explicit
+
+Public LoginSucceeded As Boolean
+Dim lcount As Integer ' in order to count properly, it needs to be declared outside of the program
+Dim Value As Long
+Dim Answer As Integer
+
+Private Sub cmdEnd_Click()
+    End
+End Sub
+
+Private Sub cmdLogin_Click()
+    Answer = Counting(Value)
+End Sub
+
+Private Sub cmdCancel_Click()
+    'set the global var to false to denote a failed login
+    LoginSucceeded = False
+    Me.Hide
+End Sub
+
+Function ClearAll(ByRef Value As Long) As Long
+    UserName.Text = ""
+    Password.Text = ""
+End Function
+
+Function PMsg(ByRef Value As Long) As Long
+    Static count As Integer
+    If UserName.Text = "asadmin" And Password.Text = "password" Then
+        LoginSucceeded = True
+        MsgBox "Login Successful", vbOKOnly + vbExclamation, "Accepted!"
+        Form2.Show
+        ClearAll (Value)
+        Me.Hide
+    ElseIf LoginSucceeded = False Then
+        MsgBox "Wrong", vbOKOnly + vbCritical, "Error!"
+        ClearAll (Value)
+        UserName.SetFocus
+    End If
+End Function
+
+Function Counting(ByRef Value As Long) As Long
+      
+    If lcount = 0 Then
+        Answer = PMsg(Value)
+        lcount = lcount + 1
+    ElseIf lcount = 1 Then
+        Answer = PMsg(Value)
+        lcount = lcount + 1
+    Else
+        Answer = PMsg(Value)
+        If LoginSucceeded = False Then
+            MsgBox "Your 3 attempts were unsuccessful. Exiting the program.", vbOKOnly + vbCritical, "Error!"
+            Unload Me
+        End If
+    End If
+
+End Function
+
+Private Sub Password_KeyPress(KeyAscii As Integer)
+    If KeyAscii = 13 Then
+        SendKeys "{tab}"    ' Set the focus to the next control.
+        KeyAscii = 0        ' Ignore this key.
+        Answer = Counting(Value)
+    End If
+End Sub
+        
+Private Sub UserName_KeyPress(KeyAscii As Integer)
+    If KeyAscii = 13 Then
+        SendKeys "{tab}"    ' Set the focus to the next control.
+        KeyAscii = 0        ' Ignore this key.
+    End If
+End Sub
+
+
+' Form2 Code
 Private Sub cmdErt_Click()
     Text4.Text = Encrypt(Text1.Text, Text2.Text)
 End Sub
