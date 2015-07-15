@@ -30,6 +30,7 @@ Function PMsg(ByRef Value As Long) As Long
     Static count As Integer
     If UserName.Text = "asadmin" And Password.Text = "password" Then
         LoginSucceeded = True
+        Label3.Caption = Format(Now, "dddd, MMM d yyyy, hh:mm:ss AMPM")
         MsgBox "Login Successful", vbOKOnly + vbExclamation, "Accepted!"
         Form2.Show
         ClearAll (Value)
@@ -52,6 +53,7 @@ Function Counting(ByRef Value As Long) As Long
     Else
         Answer = PMsg(Value)
         If LoginSucceeded = False Then
+            Label3.Caption = Format(Now, "dddd, MMM d yyyy, hh:mm:ss AMPM")	
             MsgBox "Your 3 attempts were unsuccessful. Exiting the program.", vbOKOnly + vbCritical, "Error!"
             Unload Me
         End If
