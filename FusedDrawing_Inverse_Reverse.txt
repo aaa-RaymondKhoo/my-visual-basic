@@ -1,0 +1,221 @@
+'---- FORM 1 ----
+'DrawMode, DrawStyle and FillStyle properties
+Option Explicit
+
+Private Sub cmdClose_Click()
+    End
+End Sub
+
+Private Sub cmdGoTo_Click()
+    Unload Form2
+    Form1.Hide
+    Form2.Show
+End Sub
+
+Private Sub Form_Click()
+    picPicture.ForeColor = vbRed        'Set drawing color
+End Sub
+
+Private Sub chkAutoRedraw_Click()
+    'Update picPicture's AutoRedraw
+    picPicture.AutoRedraw = chkAutoRedraw.Value
+End Sub
+
+Private Sub cmdClear_Click()
+    'Enable AutoRedraw so the PictureBox can be cleared with a call to Cls
+    picPicture.AutoRedraw = True
+    Call picPicture.Cls
+    
+    'Uncheck CheckBox and set AutoRedraw to False.
+    chkAutoRedraw.Value = vbUnchecked
+    picPicture.AutoRedraw = False
+End Sub
+
+Private Sub cmdDraw_Click()
+    Dim v As Integer
+    
+    Call Randomize
+    v = txtDrawMode.Text
+    If v >= vbBlackness And v <= vbWhiteness Then
+        picPicture.DrawMode = v
+    Else
+        picPicture.DrawMode = vbCopyPen
+        txtDrawMode.Text = vbCopyPen
+    End If
+    
+    v = txtDrawStyle.Text
+    
+    If v >= vbSolid And v <= vbInsideSolid Then
+        picPicture.DrawStyle = v
+    Else
+        picPicture.DrawStyle = vbSolid
+        txtDrawStyle.Text = vbSolid
+    End If
+    
+    v = txtFillStyle.Text
+    
+    If v >= vbFSSolid And v <= vbDiagonalCross Then
+        picPicture.FillStyle = v
+    Else
+        picPicture.FillStyle = vbFSTransparent
+        txtFillStyle.Text = vbFSTransparent
+    End If
+    
+    'Draw the circle
+    picPicture.Circle (picPicture.Width / 2, picPicture.Height / 2), Int(2000 * Rnd())
+End Sub
+
+
+' ----- FORM2 -----
+'Demonstrating function RGB
+Option Explicit
+
+Private Sub DrawShape()
+    Dim x As Single, x1 As Single, y As Single, y1 As Single, r As Single, a As Single
+    Dim totalRadians As Single, theta As Single
+    
+    Call Randomize
+    Scale (3, -3)-(-3, 3)       'Change scale
+    totalRadians = 8 * Atn(1)   'Circle in Radians
+    
+    ForeColor = RGB(Rnd() * 256, Rnd() * 256, Rnd() * 256)
+    
+    a = 3 * Rnd()   'Offset used in equation
+    
+    For theta = 0.001 To totalRadians Step 0.01
+        r = Sqr(a ^ 2 / theta)
+        x = r * Cos(theta)              'y coordinate
+        y = r * Sin(theta)              'x coordinate
+        x1 = -r * Cos(theta)            'y coordinate
+        y1 = -r * Sin(theta)            'x coordinate
+        PSet (x, y)                     'Turn pixel on
+        PSet (x1, y1)                   'Turn pixel on
+    Next theta
+End Sub
+
+Private Sub DrawShape1()
+    Dim x As Single, y As Single, r As Single, a As Single
+    Dim totalRadians As Single, theta As Single
+    
+    Call Randomize
+    Scale (3, -3)-(-3, 3)       'Change scale
+    totalRadians = 8 * Atn(1)   'Circle in Radians
+    
+    ForeColor = QBColor(Rnd() * 15)
+    
+    a = 3 * Rnd()   'Offset used in equation
+    
+    For theta = 0 To totalRadians Step 0.01
+        r = a * Sin(10 * theta)        'Multi-Leaved Rose
+        x = r * Cos(theta)              'y coordinate
+        y = r * Sin(theta)              'x coordinate
+        PSet (x, y)                     'Turn pixel on
+    Next theta
+End Sub
+
+Private Sub cmdClickMe_Click()
+    Call tmrTimer_Timer
+End Sub
+
+Private Sub cmdExit_Click()
+    End
+End Sub
+
+Private Sub cmdGoTo_Click()
+    Unload Form3
+    Form2.Hide
+    Form3.Show
+End Sub
+
+Private Sub tmrTimer_Timer()
+    Call DrawShape      'Call when time interval expires
+    Call DrawShape1
+    Call DrawShape2
+End Sub
+
+Private Sub DrawShape2()
+    Dim x As Single, y As Single, a As Single, b As Single, r As Single
+    Dim totalRadians As Single, theta As Single
+    
+    Call Randomize
+    Scale (3, -3)-(-3, 3)       'Change scale
+    totalRadians = 8 * Atn(1)   'Circle in Radians
+    
+    a = 3 * Rnd()
+    b = 2 * Rnd()   'Offset used in equation
+    
+    For theta = 0 To totalRadians Step 0.01
+        r = b - a * Cos(theta)          'Multi-Leaved Rose
+        x = r * Cos(theta)              'y coordinate
+        y = r * Sin(theta)              'x coordinate
+        PSet (x, y)                     'Turn pixel on
+    Next theta
+End Sub
+
+Private Sub cmdColorChoose_Click()
+    dlgColor.ShowColor                  'Display color common dialog
+    ForeColor = dlgColor.color          'Assign color to ForeColor
+End Sub
+
+
+
+
+' ----- FORM3 -----
+'Generating the inverse of an image
+
+Private Sub cmdClose_Click()
+    End
+End Sub
+
+Private Sub Form_Load()
+    picPicture1.Picture = LoadPicture("C:\Users\rkhoo\Desktop\1402315777.jpg")
+    picPicture1.AutoRedraw = True
+End Sub
+
+Private Sub cmdInvert_Click()
+    Call picPicture1.PaintPicture(picPicture1.Picture, 0, 0, , , , , , , vbDstInvert)
+    Call SavePicture(picPicture1, "C:\Users\rkhoo\Desktop\" & "1402315777_inverse.jpg")
+End Sub
+
+'flip image horizontally
+Private Sub cmdHorizontal_Click()
+
+    Dim img As Image
+ 
+    Set img = Controls.Add("VB.Image", "imgTemp")
+    With picPicture1
+        img.Picture = .Image
+        .Cls
+        .PaintPicture img.Picture, _
+                      .ScaleWidth, _
+                      0, _
+                      -.ScaleWidth, _
+                      .ScaleHeight
+    End With
+    Call SavePicture(picPicture1, "C:\Users\rkhoo\Desktop\" & "1402315777_Hreverse.jpg")
+    Controls.Remove "imgTemp"
+    Set img = Nothing
+ 
+End Sub
+ 
+'flip image vertically
+Private Sub cmdVertical_Click()
+
+    Dim img As Image
+ 
+    Set img = Controls.Add("VB.Image", "imgTemp")
+    With picPicture1
+        img.Picture = .Image
+        picPicture1.Cls
+        .PaintPicture img.Picture, _
+                      0, _
+                      .ScaleHeight, _
+                      .ScaleWidth, _
+                      -.ScaleHeight
+    End With
+    Call SavePicture(picPicture1, "C:\Users\rkhoo\Desktop\" & "1402315777_Vreverse.jpg")
+    Controls.Remove "imgTemp"
+    Set img = Nothing
+ 
+End Sub
+
