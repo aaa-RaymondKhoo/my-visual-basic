@@ -1,0 +1,71 @@
+Dim con As New ADODB.Connection
+Dim rec As New ADODB.Recordset
+
+Private Sub cmdExit_Click()
+    End
+End Sub
+
+Private Sub cmdNew_Click()
+rec.AddNew
+End Sub
+
+Private Sub cmdUpdate_Click()
+rec.Update
+End Sub
+
+Private Sub cmdDelete_Click()
+rec.Delete
+End Sub
+
+Private Sub cmdFirst_Click()
+rec.MoveFirst
+End Sub
+
+Private Sub cmdPrev_Click()
+rec.MovePrevious
+End Sub
+
+Private Sub cmdNext_Click()
+rec.MoveNext
+End Sub
+
+Private Sub cmdLast_Click()
+rec.MoveLast
+End Sub
+
+Private Sub cmdSearch_Click()
+con.Close
+con.Open "Provider = Microsoft.Jet.OLEDB.4.0; Data source = C:\Program Files (x86)\Microsoft Visual Studio\VB98\Projects\Sample DB Entry Projects\ADODB\data.mdb;Persist Security Info=False"
+rec.CursorLocation = adUseClient
+DataGrid1.Refresh
+rec.Open "select * from table1 where ID LIKE '%" & txtSearch.Text & "%'", con, adOpenDynamic, adLockOptimistic
+If rec.EOF Then
+MsgBox "NO Record Found"
+Else
+Set DataGrid1.DataSource = rec
+End If
+End Sub
+
+Private Sub Form_Load()
+Me.Left = (Screen.Width - Me.Width) / 2
+Me.Top = (Screen.Height - Me.Height) / 2
+con.Open "Provider = Microsoft.Jet.OLEDB.4.0;Data Source = C:\Program Files (x86)\Microsoft Visual Studio\VB98\Projects\Sample DB Entry Projects\ADODB\data.mdb;Persist Security Info=False"
+rec.CursorLocation = adUseClient
+rec.Open "select * from table1", con, adOpenDynamic, adLockOptimistic
+Set txtID.DataSource = rec
+txtID.DataField = "ID"
+Set txtFirstName.DataSource = rec
+txtFirstName.DataField = "FirstName"
+Set txtLastName.DataSource = rec
+txtLastName.DataField = "LastName"
+Set txtFullName.DataSource = rec
+txtFullName.DataField = "FullName"
+Set txtAddress.DataSource = rec
+txtAddress.DataField = "Address"
+Set txtPosition.DataSource = rec
+txtPosition.DataField = "Position"
+Set txtSalary.DataSource = rec
+txtSalary.DataField = "Salary"
+Set DataGrid1.DataSource = rec
+End Sub
+
